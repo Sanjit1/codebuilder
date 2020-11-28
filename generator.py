@@ -1,6 +1,5 @@
 import json
 import random
-f = open("quotes_dataset.csv", "r")
 def header(n, name):
     ret = '{"TEST.0":{"timed":2,"count":'+str(n+1)+',"questions":['
     for i in range(n):
@@ -40,7 +39,68 @@ def genRandPatristo(num,quote):
     ret=ret[:-1]
     ret+= '},"points":550,"question":"<p>Solve this</p>","editEntry":"'+str(num)+'"},'
     return ret
-    
+
+def genRandAffine(num, quote, enc):
+    a = random.choice([3, 5, 7, 9, 11, 15, 17, 19, 21, 23])
+    b = random.randint(3, 24)
+    ret = '"CIPHER.'+str(num)+'":{"operation":"'
+    if enc==0:
+        ret+="encode"
+    elif enc==1:
+        ret+="decode"
+    elif enc==2:
+        ret+="crypt"
+    ret+='","a":'+str(a)+',"b":'+str(b)+',"cipherString":"'+quote+'","cipherType":"affine","solclick1":-1,"solclick2":-1,"replacement":{'
+    for i in range(65, 91):
+        m = chr(((i-65)*a+b)%26+65)
+        ret+='"'+chr(i)+'":"'+m+'",'
+    ret=ret[:-1]
+    ret+='},"curlang":"en","points":'
+    if enc==0:
+        ret+="175"
+    elif enc==1:
+        ret+="150"
+    elif enc==2:
+        ret+="200"
+    ret+=',"question":"<p>'
+    if enc==0:
+        ret+='Encode this sentence with the Affine cipher. (a,b)=('+str(a)+','+str(b)+').'
+    elif enc==1:
+        ret+='Decode this sentence which has been encoded with an Affine cipher. (a,b)=('+str(a)+','+str(b)+').'
+    elif enc==2:
+        one = random.randint(0,13)
+        two = random.randint(13,26)
+        onemap = (one*a+b)%26
+        twomap = (two*a+b)%26
+        ret+="Decode this sentence which has been encoded with an Affine cipher. The letters "+chr(one+65)+" and "+chr(two+65)+" map to "+chr(onemap+65)+" and "+chr(twomap+65)+"."
+    ret+='</p>","editEntry":"'+str(num)+'"},'
+    return ret
+
+def genRandCaesar(num, quote, enc):
+    a = random.randint(3,24)
+    ret = '"CIPHER.'+str(num)+'":{"operation":"'
+    if enc:
+        ret+="encode"
+    else:
+        ret+="decode"
+    ret+='","offset":'+str(a)+',"cipherString":"'+quote+'","cipherType":"caesar","replacement":{'
+    for i in range(65, 91):
+        m = chr(((i-65)+a)%26+65)
+        ret+='"'+chr(i)+'":"'+m+'",'
+    ret=ret[:-1]
+    ret+='},"curlang":"en","points":'
+    if enc:
+        ret+="150"
+    else:
+        ret+="125"
+    ret+=',"question":"<p>'
+    if enc:
+        ret+="Encode this sentence with the Caesar cipher with offset "+str(a)+"."
+    else:
+        ret+="Decode this sentence which has been encoded with an Caesar cipher."
+    ret+='</p>","editEntry":"'+str(num)+'"},'
+    return ret
+
 def genQuotes(n):
     json_file = open('quotes.json', 'r')
     l = []
@@ -61,7 +121,7 @@ def genQuotes(n):
 def genTest():
     n = int(input("Number of Questions: "))
     na = input("Test Name: ")
-    print("1a = Aristocrat, 2a = Patristocrat")
+    print("1a = Aristocrat, 2a = Patristocrat, 3a = Affine Encode, 3b = Affine Decode, 3c = Affine Cryptanalysis, 4a = Caesar Encode, 4b = Caesar Decode")
     l = []
     q = genQuotes(n)
     for i in range(n):
@@ -72,6 +132,16 @@ def genTest():
             t+=genRandAristo(i+2, q[i])
         elif l[i]=="2a":
             t+=genRandPatristo(i+2, q[i])
+        elif l[i]=="3a":
+            t+=genRandAffine(i+2, q[i], 1)
+        elif l[i]=="3b":
+            t+=genRandAffine(i+2, q[i], 0)
+        elif l[i]=="3c":
+            t+=genRandAffine(i+2, q[i], 2)
+        elif l[i]=="4a":
+            t+=genRandCaesar(i+2, q[i], False)
+        elif l[i]=="4b":
+            t+=genRandCaesar(i+2, q[i], True)
         else:
             print("You fucked up, try again")
             exit()
