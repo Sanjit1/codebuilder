@@ -1,5 +1,4 @@
 import sympy
-from google.cloud import translate
 import json
 import random
 
@@ -59,14 +58,20 @@ def genRandMono(num, quote, pat, mode, hint):
         x["points"] = 250
     if hint=="0":
         x["question"] = x["question"][:-4]+" The first word is "+quote.split(" ")[0]+".</p>"
-        x["points"] = x["points"]-10*len(quote.split(" ")[0])
+        if pat=="1":
+            x["points"] = x["points"]-30*len(quote.split(" ")[0])
+        else:
+            x["points"] = x["points"]-10*len(quote.split(" ")[0])
     if hint=="1":
         letter = random.randint(97,122)
         while chr(letter) not in quote:
             letter = random.randint(97,122)
         m = key[letter-97]
         x["question"] = x["question"][:-4]+" The letter "+chr(letter).upper()+" maps to "+m+".</p>"
-        x["points"] = x["points"]-10*quote.count(chr(letter))
+        if pat=="1":
+            x["points"] = x["points"]-15*quote.count(chr(letter))
+        else:
+            x["points"] = x["points"]-5*quote.count(chr(letter))
     return x
 
 def genRandXeno(num, quote, hint):
@@ -202,6 +207,7 @@ def genRand2x2Hill(num, quote, enc):
         "keyword": key
     }
     if enc=="C":
+        x["operation"]="decode"
         x["points"]=100
         x["question"]="<p>Compute the decryption matrix of the key "+key+".</p>"
         x["cipherString"]=""
@@ -532,27 +538,47 @@ def get3x3Key():
     return f.readline().strip().lower()
 
 def genTest():
-    n = int(input("Number of Questions: "))
     na = input("Test Name: ")
-    print("1\tAristocrat\t\tDecode\tD\t\tWord Hint\t0")
-    print("2\tPatristocrat\t\tEncode\tE\t\tCharacter Hint\t1")
-    print("3\tAffine\t\t\tCrypt\tC\t\tNo Hint \t2")
-    print("4\tCaesar\t\t\t\t\t\tLetter 4 Letter\tL")
-    print("5\tVigenere\t\t\t\t\tSequence\tS")
-    print("6\t2x2 Hill\t\t\t\t\tWords\t\tW")
-    print("7\t3x3 Hill")
-    print("8\tXenocrypt")
-    print("9\tBaconian")
-    print("10\tRSA")
-    print("11\tMorbit")
-    print("12\tPollux")
+    preset = input("Would you like to use a preset? 1 = All types, 2 = Normal test, 3 = No: ")
+    l = []
+    if preset=="1":
+        l = ["1 1 2", "1 1 1", "1 1 0", "2 2 2", "2 2 1", "2 2 0", "3 D", "3 E", "3 C", "4 D", "4 E", "5 D", "5 E", "5 C", "6 D", "6 E", "6 C", "7 D", "7 E", "8  1", "9  L", "9  S", "9  W", "10 D", "10 E", "11 D", "11 C", "12 D", "12 C"]
+        n = 29
+    elif preset=="2":
+        aff = ["3 D", "3 E", "3 C"]
+        vig = ["5 D", "5 E", "5 C"]
+        hill2 = ["6 D", "6 E", "6 C"]
+        hill3 = ["7 D", "7 E"]
+        bac = ["9  L", "9  S", "9  W"]
+        mor = ["11 D", "11 C","12 D", "12 C"]
+        random.shuffle(aff)
+        random.shuffle(vig)
+        random.shuffle(hill2)
+        random.shuffle(hill3)
+        random.shuffle(bac)
+        random.shuffle(mor)
+        l = ["1 1 2","1 1 2","1 1 2","1 1 2","1 1 2","1 1 2","1 1 2","1 1 2","1 1 2","1 1 2","2 1 2", "2 1 1", "2 1 0", aff[0], aff[1], "4 D", "4 E", vig[0], vig[1], hill2[0], hill2[1], hill3[0], "8  1", bac[0], bac[1], "10 D", "10 E", mor[0], mor[1], mor[2]]
+        n = 30
+    else:
+        n = int(input("Number of Questions: "))
+        print("1\tAristocrat\t\tDecode\tD\t\tWord Hint\t0")
+        print("2\tPatristocrat\t\tEncode\tE\t\tCharacter Hint\t1")
+        print("3\tAffine\t\t\tCrypt\tC\t\tNo Hint \t2")
+        print("4\tCaesar\t\t\t\t\t\tLetter 4 Letter\tL")
+        print("5\tVigenere\t\t\t\t\tSequence\tS")
+        print("6\t2x2 Hill\t\t\t\t\tWords\t\tW")
+        print("7\t3x3 Hill")
+        print("8\tXenocrypt")
+        print("9\tBaconian")
+        print("10\tRSA")
+        print("11\tMorbit")
+        print("12\tPollux")
+        for i in range(n):
+            l.append(input("Q"+str(i+1)+": "))
+    q = genQuotes(n+1)
     test = {
         "TEST.0": header(n,na)
     }
-    l = []
-    q = genQuotes(n+1)
-    for i in range(n):
-        l.append(input("Q"+str(i+1)+": "))
     test["CIPHER.0"]=genRandMono(0, q[len(q)-1], False, 0, 0)
     for i in range(n):
         question = l[i].split(" ")
