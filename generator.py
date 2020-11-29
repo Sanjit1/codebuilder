@@ -14,9 +14,12 @@ def header(n, name):
         "testtype":"cstate"
     }
     
-def keyStringRandom():
+def keyStringRandom(xeno):
     spl = lambda word: [char for char in word]
-    A = spl("ABCDEFGHIJKLMNOPQRSTUVWXYZ")
+    if xeno:
+        A = spl("ABCDEFGHIJKLMNÑOPQRSTUVWXYZ")
+    else:
+        A = spl("ABCDEFGHIJKLMNOPQRSTUVWXYZ")
     while not test1(A):
         random.shuffle(A)
     return "".join(A)
@@ -28,7 +31,7 @@ def test1(l):
     return True
     
 def genRandMono(num, quote, pat, mode, hint):
-    key = keyStringRandom()
+    key = keyStringRandom(False)
     r = {}
     for i in range(0, 26):
         r[chr(i+65)] = key[i]
@@ -54,8 +57,46 @@ def genRandMono(num, quote, pat, mode, hint):
         x["cipherType"] = "aristocrat"
         x["question"] = "<p>Solve this aristocrat.</p>"
         x["points"] = 250
+    if hint=="0":
+        x["question"] = x["question"][:-4]+" The first word is "+quote.split(" ")[0]+".</p>"
+        x["points"] = x["points"]-10*len(quote.split(" ")[0])
+    if hint=="1":
+        letter = random.randint(97,122)
+        while chr(letter) not in quote:
+            letter = random.randint(97,122)
+        m = key[letter-97]
+        x["question"] = x["question"][:-4]+" The letter "+chr(letter).upper()+" maps to "+m+".</p>"
+        x["points"] = x["points"]-10*quote.count(chr(letter))
     return x
 
+def genRandXeno(num, quote, hint):
+    key = keyStringRandom(True)
+    print(key)
+    quote = genSpanishQuote(70, 160)
+    r = {}
+    for i in range(0, 14):
+        r[chr(i+65)] = key[i]
+    r["Ñ"]=key[14]
+    for i in range(14, 26):
+        r[chr(i+65)] = key[i+1]
+    x = {
+        "cipherString":quote,
+        "encodeType":"random",
+        "offset":1,
+        "shift":1,
+        "offset2":1,
+        "keyword":"",
+        "keyword2":"",
+        "alphabetSource":"ABCDEFGHIJKLMNÑOPQRSTUVWXYZ",
+        "alphabetDest":key,
+        "curlang":"es",
+        "replacement": r,
+        "editEntry":str(num),
+        "cipherType": "aristocrat",
+        "question": "<p>Solve this xenocrypt.</p>",
+        "points": 400
+    }
+    return x
 
 def genRandAffine(num, quote, enc):
     a = random.choice([3, 5, 7, 9, 11, 15, 17, 19, 21, 23])
@@ -241,19 +282,44 @@ def genRandMorbit(num, quote, enc):
 
 def genRandPollux(num, quote, enc):
     quote=genQuoteLength(35,55)
-    morse = {'A': '.-',     'B': '-...',   'C': '-.-.', 
-        'D': '-..',    'E': '.',      'F': '..-.',
-        'G': '--.',    'H': '....',   'I': '..',
-        'J': '.---',   'K': '-.-',    'L': '.-..',
-        'M': '--',     'N': '-.',     'O': '---',
-        'P': '.--.',   'Q': '--.-',   'R': '.-.',
-        'S': '...',    'T': '-',      'U': '..-',
-        'V': '...-',   'W': '.--',    'X': '-..-',
-        'Y': '-.--',   'Z': '--..',
-        '0': '-----',  '1': '.----',  '2': '..---',
-        '3': '...--',  '4': '....-',  '5': '.....',
-        '6': '-....',  '7': '--...',  '8': '---..',
-        '9': '----.', ' ': 'xx'
+    morse = {
+        'A': '.-',
+        'B': '-...',
+        'C': '-.-.', 
+        'D': '-..',
+        'E': '.',
+        'F': '..-.',
+        'G': '--.',
+        'H': '....',
+        'I': '..',
+        'J': '.---',
+        'K': '-.-',
+        'L': '.-..',
+        'M': '--',
+        'N': '-.',
+        'O': '---',
+        'P': '.--.',
+        'Q': '--.-',
+        'R': '.-.',
+        'S': '...',
+        'T': '-',
+        'U': '..-',
+        'V': '...-',
+        'W': '.--',
+        'X': '-..-',
+        'Y': '-.--',
+        'Z': '--..',
+        '0': '-----',
+        '1': '.----',
+        '2': '..---',
+        '3': '...--',
+        '4': '....-',
+        '5': '.....',
+        '6': '-....',
+        '7': '--...',
+        '8': '---..',
+        '9': '----.',
+        ' ': 'xx'
         }
     l = list(range(0,10))
     random.shuffle(l)
@@ -296,6 +362,49 @@ def genRandPollux(num, quote, enc):
         x["crib"]=quote[:4]
         x["question"]="<p>Decode this quote which has been encoded with a Pollux cipher. The first four letters are "+quote[:4]+".</p>"
     return x
+    
+def genRandBacon(num, quote, mode):
+    quote=genQuoteLength(30,45)
+    x = {
+        "cipherString":quote,
+        "cipherType":"baconian",
+        "curlang":"en",
+        "editEntry":str(num),
+        "offset":1,
+        "alphabetSource":"",
+        "alphabetDest":"",
+        "shift":None,
+        "offset2":None,
+        "linewidth":53,
+        "words":[],
+        "question":"<p>Decode this quote which has been encoded using the Baconian cipher.</p>"
+    }
+    if mode=="W":
+        x["operation"]="words"
+        x["points"]=450
+        x["abMapping"]=random.choice(["ABABABABABABABABABABABABAB","BABABABABABABABABABABABABA","AAAAAAAAAAAAABBBBBBBBBBBBB","BBBBBBBBBBBBBAAAAAAAAAAAAA"])
+        x["texta"]="A"
+        x["textb"]="B"
+        return x
+    mappings = random.choice([["ABC","XYZ"],["ACE","BDF"],["!@#$%","^&*()"],["!#%&(","@$^*)"],["QWERTY","ASDFGH"],["abcd","ABCD"],["{([","}])"],["aeiou","bcdfghjklmnpqrstvwxyz"],["acegikmoqsuwy","bdfhjlnprtvxz"],["abcdefghijklm","nopqrstuvwxyz"],["nopqrstuvwxyz","abcdefghijklm"],["XYZ","ABC"],["BDF","ACE"],["^&*()","!@#$%"],["@$^*)","!#%&("],["ASDFGH","QWERTY"],["ABCD","abcd"],["}])","{(["],["bcdfghjklmnpqrstvwxyz","aeiou"],["bdfhjlnprtvxz","acegikmoqsuwy"],["nopqrstuvwxyz","abcdefghijklm"]])
+    a = mappings[0]
+    b = mappings[1]
+    x["texta"]=a
+    x["textb"]=b
+    if random.randint(0,2)==2:
+        x["texta"]=getBaconWords()[0]
+        x["textb"]=getBaconWords()[0]
+    if mode=="L":
+        x["operation"]="let4let"
+        x["points"]=200
+        x["abMapping"]="ABABABABABABABABABABABABAB"
+    if mode=="S":
+        x["operation"]="sequence"
+        x["points"]=300
+        x["abMapping"]="ABABABABABABABABABABABABAB"
+    return x
+
+
 
 def RSA(num, enc):
     p = sympy.randprime(200,2000)
@@ -346,6 +455,13 @@ def RSA(num, enc):
         x["question"]="<p>Given (n,e,c,d)=("+str(n)+","+str(e)+","+str(enc)+","+str(d)+"), compute the original message m.</p>"
     return x
 
+def getBaconWords():
+    while 1:
+        a = getRandWord(4,7)
+        b = getRandWord(4,7)
+        if len(a)+len(b)==len(set(a+b)):
+            return [a,b]
+
 def getRandWord(min, max):
     f = open("words.txt", "r")
     for i in range(random.randint(0,9000)):
@@ -384,6 +500,20 @@ def genQuoteLength(min,max):
         if len(l[loc])>min and len(l[loc])<max:
             return l[loc]
         loc+=1
+        
+def genSpanishQuote(min,max):
+    json_file = open('spanish.json', 'r')
+    l = []
+    data = json.load(json_file)
+    for p in data['quotes']:
+        l.append(p['Cita'])
+    random.shuffle(l)
+    loc = 0
+    while 1:
+        if len(l[loc])>min and len(l[loc])<max:
+            q = l[loc][1:-1]
+            return q
+        loc+=1
 
 def getDeterminant(l):
     if len(l)==4:
@@ -405,12 +535,12 @@ def get3x3Key():
 def genTest():
     n = int(input("Number of Questions: "))
     na = input("Test Name: ")
-    print("1\tAristocrat\t\tK1\t1\t\tWord Hint\t0")
-    print("2\tPatristocrat\t\tK2\t2\t\tCharacter Hint\t1")
-    print("3\tAffine\t\t\tDecode\tD\t\tNo Hint \t2")
-    print("4\tCaesar\t\t\tEncode\tE")
-    print("5\tVigenere\t\tCrypt\tC")
-    print("6\t2x2 Hill")
+    print("1\tAristocrat\t\tDecode\tD\t\tWord Hint\t0")
+    print("2\tPatristocrat\t\tEncode\tE\t\tCharacter Hint\t1")
+    print("3\tAffine\t\t\tCrypt\tC\t\tNo Hint \t2")
+    print("4\tCaesar\t\t\t\t\t\tLetter 4 Letter\tL")
+    print("5\tVigenere\t\t\t\t\tSequence\tS")
+    print("6\t2x2 Hill\t\t\t\t\tWords\t\tW")
     print("7\t3x3 Hill")
     print("8\tXenocrypt")
     print("9\tBaconian")
@@ -439,6 +569,10 @@ def genTest():
             test["CIPHER."+str(i+1)]=genRand2x2Hill(i, q[i], question[1])
         if int(question[0])==7:
             test["CIPHER."+str(i+1)]=genRand3x3Hill(i, q[i], question[1])
+        if int(question[0])==8:
+            test["CIPHER."+str(i+1)]=genRandXeno(i, q[i], question[1])
+        if int(question[0])==9:
+            test["CIPHER."+str(i+1)]=genRandBacon(i, q[i], question[2])
         if int(question[0])==10:
             test["CIPHER."+str(i+1)]=RSA(i, question[1])
         if int(question[0])==11:
