@@ -71,7 +71,6 @@ def genRandMono(num, quote, pat, mode, hint):
 
 def genRandXeno(num, quote, hint):
     key = keyStringRandom(True)
-    print(key)
     quote = genSpanishQuote(70, 160)
     r = {}
     for i in range(0, 14):
