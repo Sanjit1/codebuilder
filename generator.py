@@ -83,8 +83,8 @@ def genRandAffine(num, quote, enc):
         x["points"]=150
         x["question"]='<p>Decode this sentence which has been encoded with an Affine cipher. (a,b)=('+str(a)+','+str(b)+').</p>'
     elif enc=="C":
-        one = random.randint(0,13)
-        two = random.randint(13,26)
+        one = random.randint(0,12)
+        two = random.randint(13,25)
         onemap = (one*a+b)%26
         twomap = (two*a+b)%26
         x["operation"]="crypt"
@@ -120,6 +120,7 @@ def genRandCaesar(num, quote, enc):
     return x
     
 def genRandVig(num, quote, enc):
+    quote = genQuoteLength(50,70)
     key = getRandWord(5, 8)
     x = {
     "cipherType": "vigenere",
@@ -131,20 +132,19 @@ def genRandVig(num, quote, enc):
     "editEntry": str(num)
     }
     if enc=="E":
-        x["operation"] = "encode",
-        x["question"] = "<p>Encode this sentence with the Vigenere cipher using the keyword "+key+".",
+        x["operation"] = "encode"
+        x["question"] = "<p>Encode this sentence with the Vigenere cipher using the keyword "+key+".</p>"
         x["points"] = "200"
     if enc=="D":
-        x["operation"] = "decode",
-        x["question"] = "<p>Decode this sentence with the Vigenere cipher using the keyword "+key+".",
+        x["operation"] = "decode"
+        x["question"] = "<p>Decode this sentence with the Vigenere cipher using the keyword "+key+".</p>"
         x["points"] = "175"
     if enc=="C":
-        x["operation"] = "crypt",
-        x["question"] = "<p>Decode this sentence with the Vigenere cipher. The first "+str(len(key))+" characters of the sentence is "+quote[:len(key)]+".",
+        x["operation"] = "crypt"
+        x["question"] = "<p>Decode this sentence with the Vigenere cipher. The first "+str(len(key))+" characters of the sentence is "+quote[:len(key)]+".</p>"
         x["points"] = "175"
     return x
     
-
 def genRand2x2Hill(num, quote, enc):
     quote = quote.split(" ")
     q = ""
@@ -181,6 +181,122 @@ def genRand2x2Hill(num, quote, enc):
         x["question"]="<p>Decrypt this phrase with the key "+key+" using the Hill cipher.</p>"
     return x
 
+def genRand3x3Hill(num, quote, enc):
+    quote = quote.split(" ")
+    q = ""
+    a = 0
+    while len(q)<12:
+        q+=quote[a]+" "
+        a+=1
+    q=q[:-1]
+    key = get3x3Key()
+    x = {
+        "cipherString":q,
+        "cipherType":"hill",
+        "curlang":"en",
+        "editEntry":num,
+        "keyword": key
+    }
+    if enc=="E":
+        x["operation"]="encode"
+        x["points"]=225
+        x["question"]="<p>Encrypt this phrase with the key "+key+" using the Hill cipher.</p>"
+    if enc=="D":
+        x["operation"]="decode"
+        x["points"]=175
+        x["question"]="<p>Decrypt this phrase with the key "+key+" using the Hill cipher.</p>"
+    return x
+
+def genRandMorbit(num, quote, enc):
+    quote=genQuoteLength(35,55)
+    l = ["OO","O-","OX","-O","--","-X","XO","X-","XX"]
+    l2 = list(range(1,10))
+    random.shuffle(l2)
+    replacement={}
+    for i in range(9):
+        replacement[l[i]]=str(l2[i])
+    x = {
+        "cipherString":quote,
+        "cipherType":"morbit",
+        "curlang":"en",
+        "editEntry":str(num),
+        "offset":None,
+        "alphabetSource":"",
+        "alphabetDest":"",
+        "shift":None,
+        "offset2":None,
+        "replacement":replacement
+    }
+    if enc=="D":
+        x["operation"]="decode"
+        x["points"]=225
+        x["question"]="<p>Decode this quote which has been encoded using the Morbit cipher. OO,OX,X-,XO,XX matches to "+replacement["OO"]+","+replacement["OX"]+","+replacement["X-"]+","+replacement["XO"]+","+replacement["XX"]+".</p>"
+        x["hint"]="123456"
+    if enc=="C":
+        x["operation"]="crypt"
+        x["points"]=250
+        x["question"]="<p>Decode this quote which has been encoded using the Morbit cipher. The first four letters decrypts to "+quote[:4]+".</p>"
+        x["hint"]="123456"
+    return x
+
+def genRandPollux(num, quote, enc):
+    quote=genQuoteLength(35,55)
+    morse = {'A': '.-',     'B': '-...',   'C': '-.-.', 
+        'D': '-..',    'E': '.',      'F': '..-.',
+        'G': '--.',    'H': '....',   'I': '..',
+        'J': '.---',   'K': '-.-',    'L': '.-..',
+        'M': '--',     'N': '-.',     'O': '---',
+        'P': '.--.',   'Q': '--.-',   'R': '.-.',
+        'S': '...',    'T': '-',      'U': '..-',
+        'V': '...-',   'W': '.--',    'X': '-..-',
+        'Y': '-.--',   'Z': '--..',
+        '0': '-----',  '1': '.----',  '2': '..---',
+        '3': '...--',  '4': '....-',  '5': '.....',
+        '6': '-....',  '7': '--...',  '8': '---..',
+        '9': '----.', ' ': 'xx'
+        }
+    l = list(range(0,10))
+    random.shuffle(l)
+    enc1 = ""
+    for i in quote:
+        if i in morse:
+            enc1+=morse[i]+"x"
+    enc1=enc1[:-1]
+    enc2 = ""
+    for i in enc1:
+        if i==".":
+            enc2+=str(l[random.randint(0,3)])
+        if i=="-":
+            enc2+=str(l[random.randint(0,2)+4])
+        if i=="x":
+            enc2+=str(l[random.randint(0,2)+7])
+    x = {
+        "cipherString":quote,
+        "cipherType":"pollux",
+        "replacement":{},
+        "dotchars":str(l[0])+str(l[1])+str(l[2])+str(l[3]),
+        "dashchars":str(l[4])+str(l[5])+str(l[6]),
+        "xchars":str(l[7])+str(l[8])+str(l[9]),
+        "curlang":"en",
+        "editEntry":str(num),
+        "offset":None,
+        "alphabetSource":"",
+        "alphabetDest":"",
+        "shift":None,
+        "offset2":None,
+        "encoded":enc2
+    }
+    if enc=="D":
+        x["operation"]="decode"
+        x["points"]=275
+        x["question"]="<p>Decode this quote which has been encoded with a Pollux cipher. "+str(l[0])+","+str(l[1])+","+str(l[4])+","+str(l[5])+","+str(l[7])+","+str(l[8])+"= . . - - x x.</p>"
+    if enc=="C":
+        x["operation"]="crypt"
+        x["points"]=350
+        x["crib"]=quote[:4]
+        x["question"]="<p>Decode this quote which has been encoded with a Pollux cipher. The first four letters are "+quote[:4]+".</p>"
+    return x
+
 def RSA(num, enc):
     p = sympy.randprime(200,2000)
     q = sympy.randprime(200,2000)
@@ -214,16 +330,16 @@ def RSA(num, enc):
         x["operation"]="rsa2"
         x["digitsPrime"]=4
         x["digitsCombo"]=4
-        x["points"]=450
+        x["points"]=350
         x["combo"]=1000
-        x["question"]="<p>Given primes (p,q)=("+str(p)+","+str(q)+"), compute the private key d.</p>"
+        x["question"]="<p>Given primes (p,q,e)=("+str(p)+","+str(q)+","+str(e)+"), compute the private key d.</p>"
     if enc=="D":
         year = random.randint(1950,2000)
         enc = pow(year,e,n)
         x["operation"]="rsa4"
         x["digitsPrime"]=4
         x["digitsCombo"]=4
-        x["points"]=350
+        x["points"]=500
         x["year"]=year
         x["encrypted"]=enc
         x["name2"]="Jason"
@@ -240,11 +356,11 @@ def getRandWord(min, max):
     return r
 
 def genQuotes(n):
-    json_file = open('quotes.json', 'r')
+    json_file = open('quotes2.json', 'r')
     l = []
     data = json.load(json_file)
     for p in data['quotes']:
-        l.append(p['text'])
+        l.append(p['quoteText'])
     random.shuffle(l)
     count = 0
     loc = 0
@@ -255,6 +371,19 @@ def genQuotes(n):
             count+=1
         loc+=1
     return r
+    
+def genQuoteLength(min,max):
+    json_file = open('quotes.json', 'r')
+    l = []
+    data = json.load(json_file)
+    for p in data['quotes']:
+        l.append(p['text'])
+    random.shuffle(l)
+    loc = 0
+    while 1:
+        if len(l[loc])>min and len(l[loc])<max:
+            return l[loc]
+        loc+=1
 
 def getDeterminant(l):
     if len(l)==4:
@@ -262,11 +391,16 @@ def getDeterminant(l):
     return 0
 
 def get2x2Key():
-    determinant=0
-    while (determinant%2==0 or determinant%13==0):
-        l = random.sample(range(0,26),4)
-        determinant=getDeterminant(l)
-    return "".join(chr(i+97) for i in l)
+    f = open("2x2hillwords", "r")
+    for i in range(0,random.randint(0,490)):
+        f.readline()
+    return f.readline().strip().lower()
+    
+def get3x3Key():
+    f = open("3x3hillwords", "r")
+    for i in range(0,random.randint(0,4900)):
+        f.readline()
+    return f.readline().strip().lower()
 
 def genTest():
     n = int(input("Number of Questions: "))
@@ -303,8 +437,14 @@ def genTest():
             test["CIPHER."+str(i+1)]=genRandVig(i, q[i], question[1])
         if int(question[0])==6:
             test["CIPHER."+str(i+1)]=genRand2x2Hill(i, q[i], question[1])
+        if int(question[0])==7:
+            test["CIPHER."+str(i+1)]=genRand3x3Hill(i, q[i], question[1])
         if int(question[0])==10:
             test["CIPHER."+str(i+1)]=RSA(i, question[1])
+        if int(question[0])==11:
+            test["CIPHER."+str(i+1)]=genRandMorbit(i, q[i], question[1])
+        if int(question[0])==12:
+            test["CIPHER."+str(i+1)]=genRandPollux(i, q[i], question[1])
     file = open(na+".json", "w")
     print(test)
     file.write(json.dumps(test))
