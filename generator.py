@@ -1,5 +1,4 @@
 import sympy
-from google.cloud import translate
 import json
 import random
 
