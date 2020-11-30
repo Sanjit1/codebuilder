@@ -64,7 +64,7 @@ def genRandMono(num, quote, pat, mode, hint):
             x["points"] = x["points"]-10*len(quote.split(" ")[0])
     if hint=="1":
         letter = random.randint(97,122)
-        while chr(letter) not in quote:
+        while r[chr(letter-32)] not in quote.upper():
             letter = random.randint(97,122)
         m = key[letter-97]
         x["question"] = x["question"][:-4]+" The letter "+chr(letter).upper()+" maps to "+m+".</p>"
@@ -412,8 +412,8 @@ def genRandBacon(num, quote, mode):
 
 
 def RSA(num, enc):
-    p = sympy.randprime(200,2000)
-    q = sympy.randprime(200,2000)
+    p = sympy.randprime(200,1000)
+    q = sympy.randprime(200,1000)
     n = p*q
     phi = (p-1)*(q-1)
     e = sympy.randprime(0,n)
@@ -482,12 +482,18 @@ def genQuotes(n):
     data = json.load(json_file)
     for p in data['quotes']:
         l.append(p['quoteText'])
+    json_file = open('quotes.json', 'r')
+    data2 = json.load(json_file)
+    for p in data2['quotes']:
+        l.append(p['text'])
     random.shuffle(l)
+    l = list(set(l))
+    print(len(l))
     count = 0
     loc = 0
     r = []
     while count<n:
-        if len(l[loc])>70 and len(l[loc])<160:
+        if len(l[loc])>65 and len(l[loc])<160:
             r.append(l[loc])
             count+=1
         loc+=1
@@ -539,7 +545,7 @@ def get3x3Key():
 
 def genTest():
     na = input("Test Name: ")
-    preset = input("Would you like to use a preset? 1 = All types, 2 = Normal test, 3 = No: ")
+    preset = input("Would you like to use a preset? 1 = All types, 2 = Normal test, 3 = Aristo spam, 4 = Patristo spam, 5 = No: ")
     l = []
     if preset=="1":
         l = ["1 1 2", "1 1 1", "1 1 0", "2 2 2", "2 2 1", "2 2 0", "3 D", "3 E", "3 C", "4 D", "4 E", "5 D", "5 E", "5 C", "6 D", "6 E", "6 C", "7 D", "7 E", "8  1", "9  L", "9  S", "9  W", "10 D", "10 E", "11 D", "11 C", "12 D", "12 C"]
@@ -559,6 +565,12 @@ def genTest():
         random.shuffle(mor)
         l = ["1 1 2","1 1 2","1 1 2","1 1 2","1 1 2","1 1 2","1 1 2","1 1 2","1 1 2","1 1 2","2 1 2", "2 1 1", "2 1 0", aff[0], aff[1], "4 D", "4 E", vig[0], vig[1], hill2[0], hill2[1], hill3[0], "8  1", bac[0], bac[1], "10 D", "10 E", mor[0], mor[1], mor[2]]
         n = 30
+    elif preset=="3":
+        l = ["1 1 2","1 1 2","1 1 2","1 1 2","1 1 2","1 1 2","1 1 2","1 1 2","1 1 2","1 1 2"]
+        n = 10
+    elif preset=="4":
+        l = ["2 1 2","2 1 2","2 1 2","2 1 2","2 1 2","2 1 2","2 1 2","2 1 2","2 1 2","2 1 2"]
+        n = 10
     else:
         n = int(input("Number of Questions: "))
         print("1\tAristocrat\t\tDecode\tD\t\tWord Hint\t0")
