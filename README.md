@@ -3,6 +3,8 @@ Automates creating a Codebusters test for Science Olympiad practice. Outputs a j
 
 This program pulls quotes from a database of 40000+ quotes. All ciphers for use in the 2020-2021 season, with the exception of keyed monoalphabetic substitution ciphers (K1/K2), have been implemented.
 
+**Disclaimer: This program is only for practice. If you are an event supervisor, tournament director, or any test writer, you may not use Codebuilder to generate tests for use in any sanctioned competition, including invitationals, regionals, or state competitions (You may use it at nats 😏). In addition, you may to not use Codebuilder for any test exchanges, such as SSSS, Captains Test Exchange, or anywhere where the test will be publicly released without my (Allen Chang) explicit written permission.**
+
 ### Presets ###
 Currently, there are four presets:
 
