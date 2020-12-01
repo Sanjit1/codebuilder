@@ -1,4 +1,4 @@
-# Codebusters Test Generator [BETA]
+# Codebuilder [BETA]
 Automates creating a Codebusters test for Science Olympiad practice. Outputs a json file that can be imported directly to Toebes.
 
 This program pulls quotes from a database of 40000+ quotes. All ciphers for use in the 2020-2021 season, with the exception of keyed monoalphabetic substitution ciphers (K1/K2), have been implemented.
