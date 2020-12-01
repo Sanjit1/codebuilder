@@ -5,6 +5,7 @@ This program pulls quotes from a database of 40000+ quotes. All ciphers for use 
 
 ### Presets ###
 Currently, there are four presets:
+
 1.  **All Types** - 29 Questions + Timed - Includes one of each cipher type.
     - 1 Timed Question
     - 1 Unhinted Aristocrat
@@ -36,7 +37,8 @@ Currently, there are four presets:
     - 1 Morbit Cryptanalysis
     - 1 Pollux Decrypt
     - 1 Pollux Cryptanalysis
-2.  **Normal Test** - 30 Questions + Timed - Normal test, with random modes of questions.
+   
+2.  **National Level Test** - 30 Questions + Timed - National level test, with random modes of questions.
     - 1 Timed Question
     - 10 Unhinted Aristocrats
     - 1 Unhinted Patristocrat
@@ -51,10 +53,30 @@ Currently, there are four presets:
     - 2 Bacon
     - 2 RSA
     - 3 Morse
-3.  **Aristo Spam** - 10 Questions + Timed - 10 Unhinted Aristocrats.
+
+3.  **Regional Level Test** - 19 Questions + Timed - Regional level test, with random modes of questions.
+    - 1 Timed Question
+    - 4 Unhinted Aristocrats
+    - 1 Character-Hinted Aristocrat
+    - 1 Word-Hinted Aristocrat
+    - 1 Unhinted Patristocrat
+    - 1 Word-Hinted Patristocrat
+    - 1 Affine Decode
+    - 1 Caesar Decode
+    - 1 Vigenere Decode
+    - 1 2x2 Hill Decode
+    - 2 Encode (Affine/Caesar/Vigenere/2x2 Hill)
+    - 1 Xenocrypt
+    - 2 Bacon
+    - 1 Morbit Decrypt
+    - 1 Pollux Decrypt
+    
+4.  **Aristo Spam** - 10 Questions + Timed - 10 Unhinted Aristocrats.
     - 1 Timed Question
     - 10 Unhinted Aristocrats
-4.  **Patristo Spam** - 10 Questions + Timed - 10 Unhinted Patristocrats.
+    
+5.  **Patristo Spam** - 10 Questions + Timed - 10 Unhinted Patristocrats.
     - 1 Timed Question
     - 10 Unhinted Patristocrats
-5.  **Custom** - Custom made test.
+    
+6.  **Custom** - Custom made test.
