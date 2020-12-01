@@ -29,7 +29,7 @@ def test1(l):
             return False
     return True
     
-def genRandMono(num, quote, pat, mode, hint):
+def genRandMono(num, quote, pat, hint):
     key = keyStringRandom(False)
     r = {}
     for i in range(0, 26):
@@ -540,14 +540,14 @@ def genTest():
     preset = input("Would you like to use a preset? 1 = All types, 2 = Normal test, 3 = Aristo spam, 4 = Patristo spam, 5 = No: ")
     l = []
     if preset=="1":
-        l = ["1 1 2", "1 1 1", "1 1 0", "2 2 2", "2 2 1", "2 2 0", "3 D", "3 E", "3 C", "4 D", "4 E", "5 D", "5 E", "5 C", "6 D", "6 E", "6 C", "7 D", "7 E", "8  1", "9  L", "9  S", "9  W", "10 D", "10 E", "11 D", "11 C", "12 D", "12 C"]
+        l = ["1 2", "1 1", "1 0", "2 2", "2 1", "2 0", "3 D", "3 E", "3 C", "4 D", "4 E", "5 D", "5 E", "5 C", "6 D", "6 E", "6 C", "7 D", "7 E", "8 1", "9 L", "9 S", "9 W", "10 D", "10 E", "11 D", "11 C", "12 D", "12 C"]
         n = 29
     elif preset=="2":
         aff = ["3 D", "3 E", "3 C"]
         vig = ["5 D", "5 E", "5 C"]
         hill2 = ["6 D", "6 E", "6 C"]
         hill3 = ["7 D", "7 E"]
-        bac = ["9  L", "9  S", "9  W"]
+        bac = ["9 L", "9 S", "9 W"]
         mor = ["11 D", "11 C","12 D", "12 C"]
         random.shuffle(aff)
         random.shuffle(vig)
@@ -555,25 +555,25 @@ def genTest():
         random.shuffle(hill3)
         random.shuffle(bac)
         random.shuffle(mor)
-        l = ["1 1 2","1 1 2","1 1 2","1 1 2","1 1 2","1 1 2","1 1 2","1 1 2","1 1 2","1 1 2","2 1 2", "2 1 1", "2 1 0", aff[0], aff[1], "4 D", "4 E", vig[0], vig[1], hill2[0], hill2[1], hill3[0], "8  1", bac[0], bac[1], "10 D", "10 E", mor[0], mor[1], mor[2]]
+        l = ["1 2","1 2","1 2","1 2","1 2","1 2","1 2","1 2","1 2","1 2","2 2", "2 1", "2 0", aff[0], aff[1], "4 D", "4 E", vig[0], vig[1], hill2[0], hill2[1], hill3[0], "8 1", bac[0], bac[1], "10 D", "10 E", mor[0], mor[1], mor[2]]
         n = 30
     elif preset=="3":
-        l = ["1 1 2","1 1 2","1 1 2","1 1 2","1 1 2","1 1 2","1 1 2","1 1 2","1 1 2","1 1 2"]
+        l = ["1 2"]*10
         n = 10
     elif preset=="4":
-        l = ["2 1 2","2 1 2","2 1 2","2 1 2","2 1 2","2 1 2","2 1 2","2 1 2","2 1 2","2 1 2"]
+        l = ["2 2"]*10
         n = 10
     else:
         n = int(input("Number of Questions: "))
-        print("1\tAristocrat\t\tDecode\tD\t\tWord Hint\t0")
-        print("2\tPatristocrat\t\tEncode\tE\t\tCharacter Hint\t1")
-        print("3\tAffine\t\t\tCrypt\tC\t\tNo Hint \t2")
-        print("4\tCaesar\t\t\t\t\t\tLetter 4 Letter\tL")
-        print("5\tVigenere\t\t\t\t\tSequence\tS")
-        print("6\t2x2 Hill\t\t\t\t\tWords\t\tW")
-        print("7\t3x3 Hill")
-        print("8\tXenocrypt")
-        print("9\tBaconian")
+        print("1\tAristocrat\t\tD\tDecode")
+        print("2\tPatristocrat\t\tE\tEncode")
+        print("3\tAffine\t\t\tC\tCrypt")
+        print("4\tCaesar\t\t\tL\tLetter 4 Letter")
+        print("5\tVigenere\t\tS\tSequence")
+        print("6\t2x2 Hill\t\tW\tWords")
+        print("7\t3x3 Hill\t\t0\tWord Hint")
+        print("8\tXenocrypt\t\t1\tCharacter Hint")
+        print("9\tBaconian\t\t2\tNo Hint")
         print("10\tRSA")
         print("11\tMorbit")
         print("12\tPollux")
@@ -583,11 +583,11 @@ def genTest():
     test = {
         "TEST.0": header(n,na)
     }
-    test["CIPHER.0"]=genRandMono(0, q[len(q)-1], False, 0, 0)
+    test["CIPHER.0"]=genRandMono(0, q[len(q)-1], False, 0)
     for i in range(n):
         question = l[i].split(" ")
         if int(question[0])<=2:
-            test["CIPHER."+str(i+1)]=genRandMono(i, q[i], "1" if question[0]=="2" else 0, question[1], question[2])
+            test["CIPHER."+str(i+1)]=genRandMono(i, q[i], "1" if question[0]=="2" else 0, question[1])
         if int(question[0])==3:
             test["CIPHER."+str(i+1)]=genRandAffine(i, q[i], question[1])
         if int(question[0])==4:
@@ -601,7 +601,7 @@ def genTest():
         if int(question[0])==8:
             test["CIPHER."+str(i+1)]=genRandXeno(i, q[i], question[1])
         if int(question[0])==9:
-            test["CIPHER."+str(i+1)]=genRandBacon(i, q[i], question[2])
+            test["CIPHER."+str(i+1)]=genRandBacon(i, q[i], question[1])
         if int(question[0])==10:
             test["CIPHER."+str(i+1)]=RSA(i, question[1])
         if int(question[0])==11:
