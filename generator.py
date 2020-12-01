@@ -537,7 +537,7 @@ def get3x3Key():
 
 def genTest():
     na = input("Test Name: ")
-    preset = input("Would you like to use a preset? 1 = All types, 2 = Normal test, 3 = Aristo spam, 4 = Patristo spam, 5 = No: ")
+    preset = input("Would you like to use a preset? 1 = All types, 2 = National level test, 3 = Regional level test, 4 = Aristo spam, 5 = Patristo spam, 6 = No: ")
     l = []
     if preset=="1":
         l = ["1 2", "1 1", "1 0", "2 2", "2 1", "2 0", "3 D", "3 E", "3 C", "4 D", "4 E", "5 D", "5 E", "5 C", "6 D", "6 E", "6 C", "7 D", "7 E", "8 1", "9 L", "9 S", "9 W", "10 D", "10 E", "11 D", "11 C", "12 D", "12 C"]
@@ -558,9 +558,16 @@ def genTest():
         l = ["1 2","1 2","1 2","1 2","1 2","1 2","1 2","1 2","1 2","1 2","2 2", "2 1", "2 0", aff[0], aff[1], "4 D", "4 E", vig[0], vig[1], hill2[0], hill2[1], hill3[0], "8 1", bac[0], bac[1], "10 D", "10 E", mor[0], mor[1], mor[2]]
         n = 30
     elif preset=="3":
+        enc = ["3 E", "4 E", "5 E", "6 E"]
+        bac = ["9 L", "9 S", "9 W"]
+        random.shuffle(enc)
+        random.shuffle(bac)
+        l = ["1 2","1 2","1 2","1 2","1 2","1 2","2 2","2 0","3 D", "4 D", "5 D", "6 D", enc[0], enc[1], "8 1", bac[0], bac[1], "11 D","12 D"]
+        n = 19
+    elif preset=="4":
         l = ["1 2"]*10
         n = 10
-    elif preset=="4":
+    elif preset=="5":
         l = ["2 2"]*10
         n = 10
     else:
