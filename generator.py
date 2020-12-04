@@ -595,7 +595,7 @@ def genTest():
     for i in range(n):
         question = l[i].split(" ")
         if int(question[0])<=2:
-            test["CIPHER."+str(i+1)]=genRandMono(i, q[i], "1" if question[0]=="2" else "0", question[1])
+            test["CIPHER."+str(i+1)]=genRandMono(i, q[i], "1" if question[0]=="2" else 0, question[1])
         if int(question[0])==3:
             test["CIPHER."+str(i+1)]=genRandAffine(i, q[i], question[1])
         if int(question[0])==4:
