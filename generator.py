@@ -537,7 +537,7 @@ def get3x3Key():
     return f.readline().strip().lower()
 
 def genTest():
-    na = input("Test Name: ")
+    na = raw_input("Test Name: ")
     preset = input("Would you like to use a preset? 1 = All types, 2 = National level test, 3 = Regional level test, 4 = Aristo spam, 5 = Patristo spam, 6 = No: ")
     l = []
     if preset=="1":
@@ -572,7 +572,7 @@ def genTest():
         l = ["2 2"]*10
         n = 10
     else:
-        n = int(input("Number of Questions: "))
+        n = int(raw_input("Number of Questions: "))
         print("1\tAristocrat\t\tD\tDecode")
         print("2\tPatristocrat\t\tE\tEncode")
         print("3\tAffine\t\t\tC\tCrypt")
@@ -586,16 +586,16 @@ def genTest():
         print("11\tMorbit")
         print("12\tPollux")
         for i in range(n):
-            l.append(input("Q"+str(i+1)+": "))
+            l.append(raw_input("Q"+str(i+1)+": "))
     q = genQuotes(n+1)
     test = {
         "TEST.0": header(n,na)
     }
     test["CIPHER.0"]=genRandMono(0, q[len(q)-1], False, 0)
     for i in range(n):
-        question = l[i].split(" ")
+        question = l[i].split(" ")[0]
         if int(question[0])<=2:
-            test["CIPHER."+str(i+1)]=genRandMono(i, q[i], "1" if question[0]=="2" else 0, question[1])
+            test["CIPHER."+str(i+1)]=genRandMono(i, q[i], "1" if question[0]=="2" else "0", question[1])
         if int(question[0])==3:
             test["CIPHER."+str(i+1)]=genRandAffine(i, q[i], question[1])
         if int(question[0])==4:
