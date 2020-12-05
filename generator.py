@@ -593,7 +593,7 @@ def genTest():
     }
     test["CIPHER.0"]=genRandMono(0, q[len(q)-1], False, 0)
     for i in range(n):
-        question = l[i].split(" ")[0]
+        question = l[i].split(" ")
         if int(question[0])<=2:
             test["CIPHER."+str(i+1)]=genRandMono(i, q[i], "1" if question[0]=="2" else "0", question[1])
         if int(question[0])==3:
