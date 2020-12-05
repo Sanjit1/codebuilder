@@ -1,4 +1,3 @@
-## Test folder
+## Tests
 
-
-All tests generated using `generator.py` will appear in this folder.
+All tests generated will appear in this folder.
