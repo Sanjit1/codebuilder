@@ -1,3 +1,4 @@
+# coding: utf-8
 import sympy
 import json
 import random
@@ -615,7 +616,7 @@ def genTest():
             test["CIPHER."+str(i+1)]=genRandMorbit(i, q[i], question[1])
         if int(question[0])==12:
             test["CIPHER."+str(i+1)]=genRandPollux(i, q[i], question[1])
-    file = open(na+".json", "w")
+    file = open("./tests/" +na+".json", "w")
     print(test)
     file.write(json.dumps(test))
     file.close()
