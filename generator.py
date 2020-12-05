@@ -538,7 +538,7 @@ def get3x3Key():
 
 def genTest():
     na = raw_input("Test Name: ")
-    preset = input("Would you like to use a preset? 1 = All types, 2 = National level test, 3 = Regional level test, 4 = Aristo spam, 5 = Patristo spam, 6 = No: ")
+    preset = str(raw_input("Would you like to use a preset? 1 = All types, 2 = National level test, 3 = Regional level test, 4 = Aristo spam, 5 = Patristo spam, 6 = No: "))
     l = []
     if preset=="1":
         l = ["1 2", "1 1", "1 0", "2 2", "2 1", "2 0", "3 D", "3 E", "3 C", "4 D", "4 E", "5 D", "5 E", "5 C", "6 D", "6 E", "6 C", "7 D", "7 E", "8 1", "9 L", "9 S", "9 W", "10 D", "10 E", "11 D", "11 C", "12 D", "12 C"]
